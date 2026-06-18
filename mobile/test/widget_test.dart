@@ -1,30 +1,42 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:mobile/main.dart';
+import 'package:mobile/app.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('blood test upload flow uses fake local state', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const BloodLensApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('BloodLens'), findsOneWidget);
+    expect(find.text('Upload blood test'), findsOneWidget);
+    expect(find.text('Waiting for a report'), findsOneWidget);
+    expect(find.text('AI analysis'), findsNothing);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.tap(find.text('Upload blood test'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('File attached'), findsOneWidget);
+    expect(find.text('Ready to analyze'), findsOneWidget);
+
+    await tester.tap(find.text('Analyze result'));
+    await tester.pump();
+
+    expect(find.text('Reading biomarkers'), findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 900));
+    await tester.pump();
+
+    expect(find.text('Analysis ready'), findsOneWidget);
+
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -500));
+    await tester.pumpAndSettle();
+
+    expect(find.text('AI analysis'), findsOneWidget);
+
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -900));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Recommendations'), findsOneWidget);
   });
 }
