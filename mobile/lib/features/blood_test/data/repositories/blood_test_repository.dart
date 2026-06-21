@@ -1,9 +1,36 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:mobile/core/icons/ionicons.dart';
 import 'package:mobile/features/blood_test/data/models/blood_test_analysis.dart';
 
 class BloodTestRepository {
   const BloodTestRepository();
 
+  /// Analyze blood test markers using the FastAPI backend
+  Future<BloodTestAnalysis> analyzeBloodTest(
+    Map<String, double> markers,
+  ) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:8000/api/blood-test/analyse'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(markers),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+        return BloodTestAnalysis.fromJson(jsonData);
+      } else {
+        throw Exception(
+          'Failed to analyze blood test: ${response.statusCode} - ${response.body}',
+        );
+      }
+    } catch (e) {
+      throw Exception('Error connecting to analysis service: $e');
+    }
+  }
+
+  /// Preview analysis with mock data (for backward compatibility)
   BloodTestAnalysis previewAnalysis() {
     return const BloodTestAnalysis(
       summary:
