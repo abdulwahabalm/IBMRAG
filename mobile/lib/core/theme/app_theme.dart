@@ -16,6 +16,7 @@ class AppColours extends ThemeExtension<AppColours> {
     required this.border,
     required this.success,
     required this.warning,
+    required this.error,
     required this.info,
   });
 
@@ -29,6 +30,7 @@ class AppColours extends ThemeExtension<AppColours> {
   final Color border;
   final Color success;
   final Color warning;
+  final Color error;
   final Color info;
 
   @override
@@ -43,6 +45,7 @@ class AppColours extends ThemeExtension<AppColours> {
     Color? border,
     Color? success,
     Color? warning,
+    Color? error,
     Color? info,
   }) {
     return AppColours(
@@ -56,6 +59,7 @@ class AppColours extends ThemeExtension<AppColours> {
       border: border ?? this.border,
       success: success ?? this.success,
       warning: warning ?? this.warning,
+      error: error ?? this.error,
       info: info ?? this.info,
     );
   }
@@ -77,6 +81,7 @@ class AppColours extends ThemeExtension<AppColours> {
       border: Color.lerp(border, other.border, t)!,
       success: Color.lerp(success, other.success, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
+      error: Color.lerp(error, other.error, t)!,
       info: Color.lerp(info, other.info, t)!,
     );
   }
@@ -199,6 +204,7 @@ class AppTheme {
     border: Color(0xFFDDE7E4),
     success: Color(0xFF2F9461),
     warning: Color(0xFFB7791F),
+    error: Color(0xFFD32F2F),
     info: Color(0xFF3B6EA8),
   );
 
